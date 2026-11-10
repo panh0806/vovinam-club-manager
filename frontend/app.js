@@ -1,7 +1,6 @@
-// BẠN CẦN COPY CONTRACT ADDRESS TỪ REMIX VÀ DÁN ĐÈ LÊN DÒNG CHỮ BÊN DƯỚI:
+// NHỚ DÁN LẠI ĐỊA CHỈ HỢP ĐỒNG CỦA BẠN VÀO ĐÂY:
 const contractAddress = "DÁN_ĐỊA_CHỈ_CONTRACT_VÀO_ĐÂY";
 
-// ABI đã được tích hợp sẵn 100%
 const contractABI = [
   {
     inputs: [],
@@ -132,8 +131,11 @@ let clubContract;
 
 const connectBtn = document.getElementById("connectBtn");
 const walletAddressSpan = document.getElementById("walletAddress");
+const userRoleSpan = document.getElementById("userRole");
+const mainContent = document.getElementById("mainContent");
+const adminSection = document.getElementById("adminSection");
 
-// Hàm 1: Nút kết nối ví MetaMask
+// Kết nối ví và Phân quyền
 connectBtn.onclick = async () => {
   if (window.ethereum) {
     try {
@@ -146,6 +148,23 @@ connectBtn.onclick = async () => {
       walletAddressSpan.style.color = "green";
 
       clubContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+      // XỬ LÝ PHÂN QUYỀN
+      const adminAddress = await clubContract.admin(); // Lấy địa chỉ Admin từ Smart Contract
+
+      if (address.toLowerCase() === adminAddress.toLowerCase()) {
+        // Nếu ví đang kết nối trùng với ví Admin
+        userRoleSpan.innerText = "Ban chủ nhiệm (Admin)";
+        userRoleSpan.style.color = "red";
+        adminSection.style.display = "block"; // Hiện khu vực Admin
+      } else {
+        // Nếu là ví thành viên bình thường
+        userRoleSpan.innerText = "Thành viên CLB";
+        userRoleSpan.style.color = "blue";
+        adminSection.style.display = "none"; // Ẩn khu vực Admin
+      }
+
+      mainContent.style.display = "block"; // Hiện các tính năng
       alert("Kết nối ví thành công!");
     } catch (error) {
       console.error(error);
@@ -156,20 +175,20 @@ connectBtn.onclick = async () => {
   }
 };
 
-// Hàm 2: Nút Điểm danh
+// Điểm danh
 document.getElementById("checkInBtn").onclick = async () => {
   if (!clubContract) return alert("Vui lòng kết nối ví trước!");
   try {
     const tx = await clubContract.checkIn();
-    await tx.wait(); // Chờ mạng lưới xác nhận giao dịch
+    await tx.wait();
     alert("Điểm danh thành công!");
   } catch (error) {
     console.error(error);
-    alert("Có lỗi xảy ra khi điểm danh, hãy kiểm tra console!");
+    alert("Lỗi điểm danh!");
   }
 };
 
-// Hàm 3: Nút Đóng quỹ
+// Đóng quỹ
 document.getElementById("depositBtn").onclick = async () => {
   if (!clubContract) return alert("Vui lòng kết nối ví trước!");
   const amount = document.getElementById("fundAmount").value;
@@ -182,6 +201,21 @@ document.getElementById("depositBtn").onclick = async () => {
     alert("Đóng quỹ thành công!");
   } catch (error) {
     console.error(error);
-    alert("Giao dịch bị từ chối hoặc có lỗi xảy ra!");
+    alert("Lỗi đóng quỹ!");
+  }
+};
+
+// Rút quỹ (Chỉ Admin)
+document.getElementById("withdrawBtn").onclick = async () => {
+  if (!clubContract) return alert("Vui lòng kết nối ví trước!");
+  const amount = document.getElementById("withdrawAmount").value;
+  if (!amount || amount <= 0) return alert("Nhập số tiền hợp lệ!");
+  try {
+    const tx = await clubContract.withdraw(ethers.utils.parseEther(amount));
+    await tx.wait();
+    alert("Rút quỹ thành công!");
+  } catch (error) {
+    console.error(error);
+    alert("Bạn không có quyền rút quỹ hoặc số dư không đủ!");
   }
 };
