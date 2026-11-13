@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+<<<<<<< HEAD
     <title>Hệ thống Quản lý CLB Vovinam</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
@@ -34,11 +35,56 @@
             <div style="text-align: right;">
                 <span id="userRole" style="padding: 5px 12px; border-radius: 20px; color: white;">...</span>
                 <div id="rewardContainer" style="margin-top: 10px; color: #198754; font-weight: bold;">⭐ Điểm danh: <span id="rewardScore">0</span> điểm</div>
+=======
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý CLB Vovinam</title>
+    <!-- Nhúng thư viện Tailwind CSS để có giao diện giống ảnh -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <style>
+        body { background-color: #f8f9fc; }
+        /* Style cho danh sách lịch sử sinh ra từ file app.js của bạn */
+        .history-box { height: 320px; overflow-y: auto; padding-right: 5px; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { padding: 12px 0; border-bottom: 1px solid #f3f4f6; font-size: 13px; line-height: 1.6; color: #4b5563; }
+        .user-addr { color: #3b82f6; font-weight: 600; font-family: monospace; }
+        b { color: #1f2937; }
+    </style>
+</head>
+<body class="p-4 md:p-8 font-sans text-gray-800">
+    
+    <!-- MÀN HÌNH ĐĂNG NHẬP -->
+    <div id="loginScreen" class="max-w-md mx-auto mt-20 bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Đăng nhập DApp</h2>
+        <p class="text-sm text-gray-500 mb-6">Sử dụng ví Web3 làm định danh</p>
+        <button id="loginBtn" class="w-full bg-[#f6851b] hover:bg-orange-500 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm">
+            🦊 Kết nối MetaMask
+        </button>
+    </div>
+
+    <!-- MÀN HÌNH CHÍNH -->
+    <div id="mainApp" style="display: none;" class="max-w-5xl mx-auto space-y-6">
+        
+        <!-- HEADER CHUNG -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex justify-between items-center">
+            <div>
+                <h1 class="text-lg font-bold text-gray-900">Vovinam Web3</h1>
+                <p id="walletAddress" class="text-xs text-gray-400 mt-0.5">...</p>
+            </div>
+            <div class="text-right">
+                <div id="userRole" class="inline-block bg-[#3b82f6] text-white text-xs px-4 py-1.5 rounded-full mb-1.5 font-medium shadow-sm transition-colors">
+                    ...
+                </div>
+                <div id="rewardContainer" class="text-xs text-gray-500 flex items-center justify-end gap-1 font-medium mt-1">
+                    <span class="text-yellow-400 text-sm">⭐</span> Điểm danh: <span id="rewardScore" class="font-bold text-gray-800">0</span> điểm
+                </div>
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
             </div>
         </div>
 
         <!-- TRANG ADMIN -->
         <div id="adminPage" style="display: none;">
+<<<<<<< HEAD
             <div class="card" style="border-left: 5px solid #dc3545;">
                 <h3 style="color: #dc3545; margin-top:0;">GIAO DIỆN QUẢN TRỊ VIÊN</h3>
                 
@@ -57,6 +103,71 @@
                     <button id="withdrawBtn" class="btn btn-red">Rút quỹ</button>
                 </div>
             </div>
+=======
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-[6px] border-l-[#ef4444] p-6">
+                <h2 class="text-[#ef4444] font-bold text-sm mb-5 uppercase">Giao diện quản trị viên</h2>
+                
+                <div class="bg-[#f0fdf4] rounded-lg p-5 mb-6">
+                    <p class="text-sm text-green-800 font-medium mb-3">Cài đặt buổi tập hôm nay</p>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="adminSessionInput" placeholder="VD: Tập quyền, Đối kháng..." class="border border-gray-300 rounded px-3 py-2.5 text-sm flex-1 outline-none focus:border-green-500">
+                        <button id="setSessionBtn" class="bg-[#10b981] hover:bg-green-600 text-white font-medium py-2.5 px-8 rounded text-sm transition-colors shadow-sm whitespace-nowrap">Cập nhật</button>
+                    </div>
+                    <p class="text-sm text-gray-700">Đang mở buổi tập: <span id="currentSessionAdmin" class="text-[#d946ef] font-bold">Đang tải...</span></p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-800 mb-3">Tổng quỹ hiện tại: <span id="clubBalance" class="font-bold text-base">0</span> MON</p>
+                    <div class="flex gap-2">
+                        <input type="number" id="withdrawAmount" placeholder="Số lượng rút (MON)" class="border border-gray-300 rounded px-3 py-2.5 text-sm w-56 outline-none focus:border-red-500">
+                        <button id="withdrawBtn" class="bg-[#d9534f] hover:bg-red-600 text-white font-medium py-2.5 px-8 rounded text-sm transition-colors shadow-sm whitespace-nowrap">Rút quỹ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANG THÀNH VIÊN -->
+        <div id="memberPage" style="display: none;">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 border-l-[6px] border-l-[#10b981] p-6">
+                <h2 class="text-[#10b981] font-bold text-sm mb-5 uppercase">Giao diện thành viên</h2>
+                
+                <div class="bg-[#f0fdf4] rounded-lg p-5 flex flex-col items-center mb-5">
+                    <p class="text-sm text-green-800 font-medium mb-2">Điểm danh buổi tập</p>
+                    <p class="text-sm text-gray-700 mb-4">Hôm nay tập nội dung: <span id="currentSessionMember" class="text-[#d946ef] font-bold">Đang tải...</span></p>
+                    <!-- Nút này app.js của bạn sẽ tự động đổi màu và chữ -->
+                    <button id="checkInBtn" class="w-full max-w-2xl text-white font-medium py-2.5 px-4 rounded text-sm transition-colors shadow-sm">
+                        Đang tải...
+                    </button>
+                </div>
+
+                <div class="bg-[#fffbeb] rounded-lg p-5 flex flex-col items-center">
+                    <p class="text-sm text-yellow-800 font-medium mb-3">Đóng quỹ hoạt động</p>
+                    <select id="fundMonth" class="border border-gray-300 rounded px-3 py-2 text-sm w-56 mb-2 outline-none text-gray-700 bg-white font-medium cursor-pointer">
+                        <option value="Tháng 11/2026">Tháng 11/2026</option>
+                        <option value="Tháng 12/2026">Tháng 12/2026</option>
+                        <option value="Tháng 01/2027">Tháng 01/2027</option>
+                        <option value="Tháng 02/2027">Tháng 02/2027</option>
+                    </select>
+                    <input type="text" id="fundAmount" value="Quy định: 3000 VNĐ" disabled class="border border-gray-200 bg-gray-100 rounded px-3 py-1.5 text-xs w-56 mb-4 outline-none text-[#ef4444] font-bold text-center">
+                    <!-- Nút này app.js của bạn sẽ tự động đổi màu và khóa -->
+                    <button id="depositBtn" class="w-full max-w-2xl bg-[#fd7e14] text-white font-medium py-2.5 px-4 rounded text-sm transition-colors shadow-sm">
+                        Đang tải...
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SỔ GHI CHÉP -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 h-fit">
+                <h3 class="text-[#10b981] font-semibold text-sm border-b border-gray-100 pb-3 mb-2">Sổ Điểm Danh Toàn CLB</h3>
+                <div class="history-box"><ul id="checkInList"></ul></div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 h-fit">
+                <h3 class="text-[#d97706] font-semibold text-sm border-b border-gray-100 pb-3 mb-2">Sổ Thu Quỹ Toàn CLB</h3>
+                <div class="history-box"><ul id="fundList"></ul></div>
+            </div>
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
         </div>
 
         <!-- TRANG THÀNH VIÊN -->
@@ -99,6 +210,11 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+
+    <!-- Tích hợp logic xử lý của bạn -->
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
     <script src="app.js"></script>
 </body>
 </html>

@@ -12,30 +12,48 @@ window.onload = async function () {
     return;
   }
 
+<<<<<<< HEAD
   let provider,
     signer,
     clubContract,
     currentAddress,
     isAdmin = false;
+=======
+  let provider, signer, clubContract, currentAddress, isAdmin = false;
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
 
   function shortenAddress(addr) {
     return addr.slice(0, 6) + "..." + addr.slice(-4);
   }
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
   function formatTime(timestamp) {
     return new Date(timestamp * 1000).toLocaleString("vi-VN");
   }
 
   async function loadData() {
+<<<<<<< HEAD
     // TẢI & XỬ LÝ KHÓA NÚT ĐIỂM DANH
+=======
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
     const currentSession = await clubContract.currentSessionName();
     const checkInBtn = document.getElementById("checkInBtn");
 
     if (isAdmin) {
+<<<<<<< HEAD
       document.getElementById("currentSessionAdmin").innerText = currentSession;
     } else {
       document.getElementById("currentSessionMember").innerText =
         currentSession;
       if (currentSession === "Chua co lich tap") {
+=======
+      document.getElementById("currentSessionAdmin").innerText = currentSession || "Chưa có";
+    } else {
+      document.getElementById("currentSessionMember").innerText = currentSession || "Chưa có";
+      if (!currentSession || currentSession === "Chua co lich tap") {
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
         checkInBtn.disabled = true;
         checkInBtn.innerText = "🔒 Chờ Admin mở điểm danh";
         checkInBtn.style.background = "#6c757d";
@@ -55,11 +73,17 @@ window.onload = async function () {
         `<li>✅ <span class="user-addr">${shortenAddress(record.user)}</span> <br> 🥋 Buổi tập: <b>${record.note}</b> <br> 🕒 ${formatTime(record.timestamp)}</li>`;
     });
 
+<<<<<<< HEAD
     // TẢI LỊCH SỬ ĐÓNG QUỸ & XỬ LÝ KHÓA NÚT ĐÓNG THEO THÁNG
     const funds = await clubContract.getAllFunds();
     document.getElementById("fundList").innerHTML = "";
 
     let paidMonths = []; // Lưu các tháng user hiện tại đã đóng
+=======
+    const funds = await clubContract.getAllFunds();
+    document.getElementById("fundList").innerHTML = "";
+    let paidMonths = [];
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
 
     funds.forEach((record) => {
       document.getElementById("fundList").innerHTML +=
@@ -70,7 +94,10 @@ window.onload = async function () {
       }
     });
 
+<<<<<<< HEAD
     // Hàm kiểm tra và khóa nút đóng quỹ
+=======
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
     if (!isAdmin) {
       function checkFundStatus() {
         const selectedMonth = document.getElementById("fundMonth").value;
@@ -89,13 +116,21 @@ window.onload = async function () {
         }
       }
       document.getElementById("fundMonth").onchange = checkFundStatus;
+<<<<<<< HEAD
       checkFundStatus(); // Chạy ngay khi tải xong
+=======
+      checkFundStatus();
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
     }
 
     if (isAdmin) {
       const balance = await clubContract.getBalance();
+<<<<<<< HEAD
       document.getElementById("clubBalance").innerText =
         ethers.utils.formatEther(balance);
+=======
+      document.getElementById("clubBalance").innerText = ethers.utils.formatEther(balance);
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
     } else {
       const points = await clubContract.rewardPoints(currentAddress);
       document.getElementById("rewardScore").innerText = points.toString();
@@ -168,7 +203,11 @@ window.onload = async function () {
 
   document.getElementById("depositBtn").onclick = async () => {
     const fixedAmount = "0.003";
+<<<<<<< HEAD
     const selectedMonth = document.getElementById("fundMonth").value; // Lấy tên tháng đang chọn
+=======
+    const selectedMonth = document.getElementById("fundMonth").value;
+>>>>>>> 5a7451d (Hoan thien code giao dien index va app.js)
     try {
       const tx = await clubContract.depositFund(selectedMonth, {
         value: ethers.utils.parseEther(fixedAmount),
