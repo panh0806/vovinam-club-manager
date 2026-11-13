@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hệ thống Quản lý CLB Vovinam</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; color: white; cursor: pointer; font-weight: bold; }
+        .btn-login { background: #f6851b; width: 100%; padding: 15px; font-size: 16px; margin-top: 15px; }
+        .btn-green { background: #198754; } .btn-orange { background: #fd7e14; } .btn-red { background: #dc3545; }
+        input, select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        .history-box { background: #f8f9fa; padding: 15px; border-radius: 8px; height: 320px; overflow-y: auto; border: 1px solid #eee;}
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { padding: 12px 0; border-bottom: 1px solid #ddd; font-size: 14px; line-height: 1.5; }
+        .user-addr { color: #0d6efd; font-weight: bold; font-family: monospace; font-size: 15px; }
+    </style>
+</head>
+<body>
+    <div id="loginScreen" style="max-width: 400px; margin: 100px auto; text-align: center;" class="card">
+        <h2>Đăng nhập DApp</h2>
+        <p style="color: gray;">Sử dụng ví Web3 làm định danh</p>
+        <button id="loginBtn" class="btn btn-login">🦊 Kết nối MetaMask</button>
+    </div>
+
+    <div id="mainApp" style="display: none; max-width: 900px; margin: auto;">
+        <!-- Tiêu đề -->
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="margin:0;">Vovinam Web3</h3>
+                <small id="walletAddress" style="color: gray;"></small>
+            </div>
+            <div style="text-align: right;">
+                <span id="userRole" style="padding: 5px 12px; border-radius: 20px; color: white;">...</span>
+                <div id="rewardContainer" style="margin-top: 10px; color: #198754; font-weight: bold;">⭐ Điểm danh: <span id="rewardScore">0</span> điểm</div>
+            </div>
+        </div>
+
+        <!-- TRANG ADMIN -->
+        <div id="adminPage" style="display: none;">
+            <div class="card" style="border-left: 5px solid #dc3545;">
+                <h3 style="color: #dc3545; margin-top:0;">GIAO DIỆN QUẢN TRỊ VIÊN</h3>
+                
+                <div style="background: #eef7f0; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                    <h4 style="margin-top: 0; color: #198754;">Cài đặt buổi tập hôm nay</h4>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="adminSessionInput" placeholder="VD: Tập quyền, Đối kháng..." style="width: 100%; box-sizing: border-box;">
+                        <button id="setSessionBtn" class="btn btn-green" style="white-space: nowrap;">Cập nhật</button>
+                    </div>
+                    <p style="margin: 10px 0 0 0; font-size: 15px;">Đang mở buổi tập: <strong id="currentSessionAdmin" style="color: #d63384;">Đang tải...</strong></p>
+                </div>
+
+                <p>Tổng quỹ hiện tại: <strong id="clubBalance" style="font-size: 20px;">0</strong> MON</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="withdrawAmount" placeholder="Số lượng rút (MON)">
+                    <button id="withdrawBtn" class="btn btn-red">Rút quỹ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANG THÀNH VIÊN -->
+        <div id="memberPage" style="display: none;">
+            <div class="card" style="border-left: 5px solid #198754;">
+                <h3 style="color: #198754; margin-top:0;">GIAO DIỆN THÀNH VIÊN</h3>
+                
+                <div style="background: #eef7f0; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb; text-align: center;">
+                    <h4 style="margin-top: 0; color: #198754;">Điểm danh buổi tập</h4>
+                    <p style="margin: 0 0 15px 0; font-size: 16px;">Hôm nay tập nội dung: <strong id="currentSessionMember" style="color: #d63384; font-size: 18px;">Đang tải...</strong></p>
+                    <button id="checkInBtn" class="btn btn-green" style="width: 100%;">✅ Bấm 1 lần để Điểm danh (+10đ)</button>
+                </div>
+
+                <!-- KHU VỰC ĐÓNG QUỸ MỚI CÓ CHỌN THÁNG -->
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffeeba; text-align: center;">
+                    <h4 style="margin-top: 0; color: #856404;">Đóng quỹ hoạt động</h4>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; max-width: 300px; margin-left: auto; margin-right: auto;">
+                        <select id="fundMonth" style="font-weight: bold; color: #333; cursor: pointer;">
+                            <option value="Tháng 11/2026">Tháng 11/2026</option>
+                            <option value="Tháng 12/2026">Tháng 12/2026</option>
+                            <option value="Tháng 01/2027">Tháng 01/2027</option>
+                            <option value="Tháng 02/2027">Tháng 02/2027</option>
+                        </select>
+                        <input type="text" id="fundAmount" value="Quy định: 3000 VNĐ" disabled style="background: #e9ecef; font-weight: bold; color: #dc3545; text-align: center;">
+                    </div>
+                    <button id="depositBtn" class="btn btn-orange" style="width: 100%; max-width: 300px;">💰 Đóng quỹ ngay</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LỊCH SỬ -->
+        <div style="display: flex; gap: 20px;">
+            <div class="card" style="flex: 1;">
+                <h4 style="color: #198754; margin: 0;">Sổ Điểm Danh Toàn CLB</h4>
+                <div class="history-box"><ul id="checkInList"></ul></div>
+            </div>
+            <div class="card" style="flex: 1;">
+                <h4 style="color: #fd7e14; margin: 0;">Sổ Thu Quỹ Toàn CLB</h4>
+                <div class="history-box"><ul id="fundList"></ul></div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
